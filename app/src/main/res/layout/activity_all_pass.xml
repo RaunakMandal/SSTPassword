@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Enter Details"
+        android:textColor="@color/black"
+        android:textSize="28sp" />
+
+    <EditText
+        android:id="@+id/name_per"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="26dp"
+        android:background="@drawable/border"
+        android:hint="Website Name (Required)"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/user_per"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="26dp"
+        android:background="@drawable/border"
+        android:hint="Username/Email (Required)"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/pass_per"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="26dp"
+        android:background="@drawable/border"
+        android:hint="Password (Required)"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/website_per"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="26dp"
+        android:background="@drawable/border"
+        android:hint="Website"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/submit_btn_per"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="28dp"
+        android:padding="12dp"
+        android:text="@string/submit"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <ProgressBar
+        android:id="@+id/progress_per"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp" />
+
+</LinearLayout>
