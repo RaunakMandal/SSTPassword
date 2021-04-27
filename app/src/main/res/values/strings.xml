@@ -10,7 +10,7 @@
     <string name="failed">Failed to Fetch Data, Please Retry</string>
     <string name="submit">Submit</string>
 
-    <string name="all_fields">Pleas fill all required fields</string>
+    <string name="all_fields">Please fill all required fields</string>
     <string name="delete_conf">Are you sure to delete?</string>
 
     <string name="failed_add">Failed to Add Data</string>
