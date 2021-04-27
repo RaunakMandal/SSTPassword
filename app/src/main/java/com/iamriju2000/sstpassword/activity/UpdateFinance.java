@@ -80,7 +80,7 @@ public class UpdateFinance extends AppCompatActivity {
             public void onClick(View view) {
                 if (checkFields(name) && checkFields(user) && checkFields(pass) && checkFields(acname) && checkFields(acno)) {
                     if (!checkFields(web)) {
-                        web.setText("https://srijontours.com");
+                        web.setText("https://"+name.getText().toString().toLowerCase()+".com");
                     }
                     if (!checkFields(branch)) {
                         branch.setText("Katabagan");
@@ -108,17 +108,17 @@ public class UpdateFinance extends AppCompatActivity {
         updatebtn.setVisibility(View.GONE);
         pb.setVisibility(View.VISIBLE);
         Map<String, String> mp = new HashMap<>();
-        mp.put("bankname", name.getText().toString());
-        mp.put("accname", acname.getText().toString());
-        mp.put("user", user.getText().toString());
-        mp.put("pass", pass.getText().toString());
-        mp.put("acno", acno.getText().toString());
-        mp.put("branch", branch.getText().toString());
-        mp.put("ifsc", ifsc.getText().toString());
-        mp.put("micr", micr.getText().toString());
-        mp.put("profpass", profilepass.getText().toString());
-        mp.put("txnpass", txnpass.getText().toString());
-        mp.put("web", web.getText().toString());
+        mp.put("bankname", Constants.encrypt(name.getText().toString()));
+        mp.put("accname", Constants.encrypt(acname.getText().toString()));
+        mp.put("user", Constants.encrypt(user.getText().toString()));
+        mp.put("pass", Constants.encrypt(pass.getText().toString()));
+        mp.put("acno", Constants.encrypt(acno.getText().toString()));
+        mp.put("branch", Constants.encrypt(branch.getText().toString()));
+        mp.put("ifsc", Constants.encrypt(ifsc.getText().toString()));
+        mp.put("micr", Constants.encrypt(micr.getText().toString()));
+        mp.put("profpass", Constants.encrypt(profilepass.getText().toString()));
+        mp.put("txnpass", Constants.encrypt(txnpass.getText().toString()));
+        mp.put("web", Constants.encrypt(web.getText().toString()));
 
 
         Call<String> addNewPersonal = ApiClient.fetchData().editById("finance", id, Constants.API_KEY, mp);

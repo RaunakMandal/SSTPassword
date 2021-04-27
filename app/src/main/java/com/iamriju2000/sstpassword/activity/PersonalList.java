@@ -61,12 +61,14 @@ public class PersonalList extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(PersonalList.this, AddPersonal.class));
-//                Toast.makeText(PersonalList.this, "Fuck", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void fetchData() {
+        loading.setVisibility(View.VISIBLE);
+        listRelative.setVisibility(View.GONE);
+        emptyView.setVisibility(View.GONE);
         Call<ArrayList<Personal>> call = ApiClient.fetchData().getPersonal(Constants.API_KEY);
         call.enqueue(new Callback<ArrayList<Personal>>() {
             @Override

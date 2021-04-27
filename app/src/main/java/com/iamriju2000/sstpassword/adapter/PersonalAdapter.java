@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,10 +59,10 @@ public class PersonalAdapter extends ArrayAdapter<Personal> implements Filterabl
             view = LayoutInflater.from(getContext()).inflate(R.layout.list_items, parent, false);
         }
         String id = pwd.getId();
-        String name = pwd.getName();
-        String userid = pwd.getUsername();
-        String loginpass = pwd.getPassword();
-        String web = pwd.getWebsite();
+        String name = Constants.decrypt(pwd.getName());
+        String userid = Constants.decrypt(pwd.getUsername());
+        String loginpass = Constants.decrypt(pwd.getPassword());
+        String web = Constants.decrypt(pwd.getWebsite());
 
         ImageButton more = (ImageButton) view.findViewById(R.id.show_more);
         more.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +124,7 @@ public class PersonalAdapter extends ArrayAdapter<Personal> implements Filterabl
         namee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse(pwd.getWebsite());
+                Uri uri = Uri.parse(web);
                 Intent i = new Intent(Intent.ACTION_VIEW, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(i);
             }
@@ -134,7 +135,7 @@ public class PersonalAdapter extends ArrayAdapter<Personal> implements Filterabl
             public void onClick(View view) {
                 Context context = view.getContext();
                 ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Username", pwd.getUsername());
+                ClipData clipData = ClipData.newPlainText("Username", userid);
                 clipboardManager.setPrimaryClip(clipData);
                 Toast.makeText(context, "Username Copied to Clipboard", Toast.LENGTH_SHORT).show();
             }
@@ -145,7 +146,7 @@ public class PersonalAdapter extends ArrayAdapter<Personal> implements Filterabl
             public void onClick(View view) {
                 Context context = view.getContext();
                 ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Password", pwd.getPassword());
+                ClipData clipData = ClipData.newPlainText("Password", loginpass);
                 clipboardManager.setPrimaryClip(clipData);
                 Toast.makeText(context, "Password Copied to Clipboard", Toast.LENGTH_SHORT).show();
             }
@@ -168,7 +169,7 @@ public class PersonalAdapter extends ArrayAdapter<Personal> implements Filterabl
             } else {
                 for (Personal data : nonfiltered) {
                     String detected = charSequence.toString().toLowerCase();
-                    if (data.getName().toLowerCase().contains(detected) || data.getUsername().contains(detected)) {
+                    if (Constants.decrypt(data.getName()).toLowerCase().contains(detected) || Constants.decrypt(data.getUsername()).toLowerCase().contains(detected)) {
                         resultData.add(data);
                     }
                 }

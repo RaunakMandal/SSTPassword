@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         if (!isConnect()) {
-            final AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
             dialog.setTitle("No Internet").setMessage("Please Enable WiFi/Mobile Data and Restart the App.");
             dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override

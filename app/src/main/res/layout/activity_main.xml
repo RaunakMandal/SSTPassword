@@ -4,8 +4,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:layout_marginTop="28dp"
+    android:padding="16dp"
     tools:context=".activity.MainActivity">
 
     <RelativeLayout
@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:background="@drawable/border"
+        android:foreground="?android:attr/selectableItemBackground"
         android:padding="16dp">
 
         <ImageView
@@ -27,10 +28,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/img1"
             android:layout_centerHorizontal="true"
-            android:fontFamily="monospace"
             android:text="@string/personal"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -41,6 +41,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
         android:background="@drawable/border"
+        android:foreground="?android:attr/selectableItemBackground"
         android:padding="16dp">
 
         <ImageView
@@ -54,10 +55,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/img2"
             android:layout_centerHorizontal="true"
-            android:fontFamily="monospace"
             android:text="@string/finance"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
     </RelativeLayout>
 
 </RelativeLayout>

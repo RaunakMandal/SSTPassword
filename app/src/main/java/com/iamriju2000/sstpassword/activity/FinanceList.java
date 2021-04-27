@@ -66,6 +66,9 @@ public class FinanceList extends AppCompatActivity {
     }
 
     private void fetchData() {
+        loading.setVisibility(View.VISIBLE);
+        listRelative.setVisibility(View.GONE);
+        emptyView.setVisibility(View.GONE);
         Call<ArrayList<Finance>> call = ApiClient.fetchData().getFinance(Constants.API_KEY);
         call.enqueue(new Callback<ArrayList<Finance>>() {
             @Override

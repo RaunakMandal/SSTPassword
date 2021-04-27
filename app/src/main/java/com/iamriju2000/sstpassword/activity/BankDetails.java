@@ -26,7 +26,7 @@ public class BankDetails extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             name = data.getString("name");
-            acc = data.getString("acc");
+            acc = data.getString("acno");
             ifsc = data.getString("ifsc");
             branch = data.getString("branch");
             userid = data.getString("userid");
@@ -34,7 +34,7 @@ public class BankDetails extends AppCompatActivity {
             profpass = data.getString("profpass");
             txnpass = data.getString("txnpass");
             micr = data.getString("micr");
-            url = data.getString("uri");
+            url = data.getString("web");
             accname = data.getString("accname");
 
             TextView bname = findViewById(R.id.bankname);
@@ -146,7 +146,7 @@ public class BankDetails extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, "Account Number: " + acc + "\nAccount Name: "+accname +"\nBank Name: " + name + "\nBranch Name: " + branch + "\nIFSC Code: " + ifsc + "\nMICR Code: " + micr);
-                Intent chooser = Intent.createChooser(intent, "Share your Bank Details with: ");
+                Intent chooser = Intent.createChooser(intent, "Share Bank Details");
                 startActivity(chooser);
             }
         });

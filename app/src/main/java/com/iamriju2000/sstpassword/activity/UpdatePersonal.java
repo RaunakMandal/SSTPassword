@@ -57,13 +57,14 @@ public class UpdatePersonal extends AppCompatActivity {
         updatebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkFields(name) && checkFields(user) && checkFields(pass))
-                    if(!checkFields(web)) {
-                        web.setText("https://srijontours.com");
-                        updateData();
+                if (checkFields(name) && checkFields(user) && checkFields(pass)) {
+                    if (!checkFields(web)) {
+                        web.setText("https://"+name.getText().toString().toLowerCase()+".com");
                     }
-                    else
-                        Toast.makeText(UpdatePersonal.this, getString(R.string.all_fields), Toast.LENGTH_SHORT).show();
+                    updateData();
+                }
+                else
+                    Toast.makeText(UpdatePersonal.this, getString(R.string.all_fields), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -72,10 +73,10 @@ public class UpdatePersonal extends AppCompatActivity {
         updatebtn.setVisibility(View.GONE);
         pb.setVisibility(View.VISIBLE);
         Map<String, String> mp = new HashMap<>();
-        mp.put("name", name.getText().toString());
-        mp.put("user", user.getText().toString());
-        mp.put("pass", pass.getText().toString());
-        mp.put("web", web.getText().toString());
+        mp.put("name", Constants.encrypt(name.getText().toString()));
+        mp.put("user", Constants.encrypt(user.getText().toString()));
+        mp.put("pass", Constants.encrypt(pass.getText().toString()));
+        mp.put("web", Constants.encrypt(web.getText().toString()));
 
 
         Call<String> editPersonal = ApiClient.fetchData().editById("personal", id, Constants.API_KEY, mp);

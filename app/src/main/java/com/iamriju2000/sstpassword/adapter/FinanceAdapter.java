@@ -58,17 +58,17 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
         }
         Context context = view.getContext();
         String id = pwd.getId();
-        String name = pwd.getBankname();
-        String userid = pwd.getUsername();
-        String loginpass = pwd.getPassword();
-        String web = pwd.getWebsite();
-        String acc = pwd.getAcno();
-        String profpass = pwd.getProfpass();
-        String txnpass = pwd.getTxnpass();
-        String branch = pwd.getBranch();
-        String ifsc = pwd.getIfsc();
-        String micr = pwd.getMicr();
-        String accname = pwd.getAccname();
+        String name = Constants.decrypt(pwd.getBankname());
+        String userid = Constants.decrypt(pwd.getUsername());
+        String loginpass = Constants.decrypt(pwd.getPassword());
+        String web = Constants.decrypt(pwd.getWebsite());
+        String acc = Constants.decrypt(pwd.getAcno());
+        String profpass = Constants.decrypt(pwd.getProfpass());
+        String txnpass = Constants.decrypt(pwd.getTxnpass());
+        String branch = Constants.decrypt(pwd.getBranch());
+        String ifsc = Constants.decrypt(pwd.getIfsc());
+        String micr = Constants.decrypt(pwd.getMicr());
+        String accname = Constants.decrypt(pwd.getAccname());
 
         TextView nameM = (TextView) view.findViewById(R.id.name);
         nameM.setText(name);
@@ -83,7 +83,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
                 Bundle data = new Bundle();
                 data.putString("id", id);
                 data.putString("name", name);
-                data.putString("acc", acc);
+                data.putString("acno", acc);
                 data.putString("ifsc", ifsc);
                 data.putString("branch", branch);
                 data.putString("userid", userid);
@@ -91,7 +91,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
                 data.putString("profpass", profpass);
                 data.putString("txnpass", txnpass);
                 data.putString("micr", micr);
-                data.putString("uri", web);
+                data.putString("web", web);
                 data.putString("accname", accname);
 
                 Intent intent = new Intent(context, BankDetails.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -105,7 +105,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
             public void onClick(View view) {
                 Context context = view.getContext();
                 ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Username", pwd.getUsername());
+                ClipData clipData = ClipData.newPlainText("Username", userid);
                 clipboardManager.setPrimaryClip(clipData);
                 Toast.makeText(context, "Username Copied to Clipboard", Toast.LENGTH_SHORT).show();
             }
@@ -116,7 +116,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
             public void onClick(View view) {
                 Context context = view.getContext();
                 ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Password", pwd.getPassword());
+                ClipData clipData = ClipData.newPlainText("Password", loginpass);
                 clipboardManager.setPrimaryClip(clipData);
                 Toast.makeText(context, "Password Copied to Clipboard", Toast.LENGTH_SHORT).show();
             }
@@ -137,7 +137,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
                                 Bundle data = new Bundle();
                                 data.putString("id", id);
                                 data.putString("name", name);
-                                data.putString("acc", acc);
+                                data.putString("acno", acc);
                                 data.putString("ifsc", ifsc);
                                 data.putString("branch", branch);
                                 data.putString("userid", userid);
@@ -145,7 +145,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
                                 data.putString("profpass", profpass);
                                 data.putString("txnpass", txnpass);
                                 data.putString("micr", micr);
-                                data.putString("uri", web);
+                                data.putString("web", web);
                                 data.putString("accname", accname);
 
                                 Intent intent = new Intent(context, UpdateFinance.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -186,7 +186,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
         return filter;
     }
 
-    Filter filter = new Filter() {
+    private Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
             ArrayList<Finance> resultData = new ArrayList<>();
@@ -195,7 +195,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
             } else {
                 for (Finance data : nonfiltered) {
                     String detected = charSequence.toString().toLowerCase();
-                    if (data.getBankname().toLowerCase().contains(detected) || data.getUsername().contains(detected)) {
+                    if (Constants.decrypt(data.getBankname()).toLowerCase().contains(detected) || Constants.decrypt(data.getUsername()).toLowerCase().contains(detected)) {
                         resultData.add(data);
                     }
                 }
@@ -209,6 +209,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             filtered.clear();
             filtered.addAll((Collection<? extends Finance>) filterResults.values);
+            notifyDataSetChanged();
         }
     };
 
