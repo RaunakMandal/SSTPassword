@@ -57,18 +57,18 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
             view = LayoutInflater.from(getContext()).inflate(R.layout.list_items, parent, false);
         }
         Context context = view.getContext();
-        String id = pwd.getId();
-        String name = Constants.decrypt(pwd.getBankname());
-        String userid = Constants.decrypt(pwd.getUsername());
-        String loginpass = Constants.decrypt(pwd.getPassword());
-        String web = Constants.decrypt(pwd.getWebsite());
-        String acc = Constants.decrypt(pwd.getAcno());
-        String profpass = Constants.decrypt(pwd.getProfpass());
-        String txnpass = Constants.decrypt(pwd.getTxnpass());
-        String branch = Constants.decrypt(pwd.getBranch());
-        String ifsc = Constants.decrypt(pwd.getIfsc());
-        String micr = Constants.decrypt(pwd.getMicr());
-        String accname = Constants.decrypt(pwd.getAccname());
+        String id = pwd.get_id();
+        String name = pwd.getBankname();
+        String userid = pwd.getUser();
+        String loginpass = pwd.getPass();
+        String web = pwd.getWeb();
+        String acc = pwd.getAcno();
+        String profpass = pwd.getProfpass();
+        String txnpass = pwd.getTxnpass();
+        String branch = pwd.getBranch();
+        String ifsc = pwd.getIfsc();
+        String micr = pwd.getMicr();
+        String accname = pwd.getAccname();
 
         TextView nameM = (TextView) view.findViewById(R.id.name);
         nameM.setText(name);
@@ -160,7 +160,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                delete(view, id);
+//                                                delete(view, id);
                                             }
                                         })
                                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -195,7 +195,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
             } else {
                 for (Finance data : nonfiltered) {
                     String detected = charSequence.toString().toLowerCase();
-                    if (Constants.decrypt(data.getBankname()).toLowerCase().contains(detected) || Constants.decrypt(data.getUsername()).toLowerCase().contains(detected)) {
+                    if (data.getBankname().toLowerCase().contains(detected) || data.getUser().toLowerCase().contains(detected)) {
                         resultData.add(data);
                     }
                 }
@@ -213,19 +213,19 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
         }
     };
 
-    public static void delete(View view, String id) {
-        Call<String> call = ApiClient.fetchData().deleteById("finance", id, Constants.API_KEY);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Toast.makeText(view.getContext(), response.body(), Toast.LENGTH_SHORT).show();
-                context.startActivity(new Intent(context, FinanceList.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(context, context.getString(R.string.failed_delete), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//    public static void delete(View view, String id) {
+//        Call<String> call = ApiClient.fetchData().deleteById("finance", id, Constants.API_KEY);
+//        call.enqueue(new Callback<String>() {
+//            @Override
+//            public void onResponse(Call<String> call, Response<String> response) {
+//                Toast.makeText(view.getContext(), response.body(), Toast.LENGTH_SHORT).show();
+//                context.startActivity(new Intent(context, FinanceList.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+//            }
+//
+//            @Override
+//            public void onFailure(Call<String> call, Throwable t) {
+//                Toast.makeText(context, context.getString(R.string.failed_delete), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 }

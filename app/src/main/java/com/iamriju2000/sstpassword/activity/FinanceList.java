@@ -12,7 +12,6 @@ import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.iamriju2000.sstpassword.R;
 import com.iamriju2000.sstpassword.adapter.FinanceAdapter;
@@ -28,17 +27,10 @@ import retrofit2.Response;
 
 public class FinanceList extends AppCompatActivity {
     private FinanceAdapter financeAdapter;
-    private LottieAnimationView loading;
     private RelativeLayout listRelative, emptyView;
     private ListView listView;
     private FloatingActionButton fab;
     private Button retryBtn;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        fetchData();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +40,10 @@ public class FinanceList extends AppCompatActivity {
         emptyView = (RelativeLayout) findViewById(R.id.empty_view);
         listView = (ListView) findViewById(R.id.list);
         fab = findViewById(R.id.addnew);
-        loading = (LottieAnimationView) findViewById(R.id.progress_anim);
-        retryBtn = (Button) findViewById(R.id.retry_btn);
 
         listRelative.setVisibility(View.GONE);
         emptyView.setVisibility(View.GONE);
 
-        fetchData();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,37 +54,36 @@ public class FinanceList extends AppCompatActivity {
         });
     }
 
-    private void fetchData() {
-        loading.setVisibility(View.VISIBLE);
-        listRelative.setVisibility(View.GONE);
-        emptyView.setVisibility(View.GONE);
-        Call<ArrayList<Finance>> call = ApiClient.fetchData().getFinance(Constants.API_KEY);
-        call.enqueue(new Callback<ArrayList<Finance>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Finance>> call, Response<ArrayList<Finance>> response) {
-                loading.setVisibility(View.GONE);
-                listRelative.setVisibility(View.VISIBLE);
-                financeAdapter = new FinanceAdapter(getApplicationContext(), response.body());
-                listView.setAdapter(financeAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Finance>> call, Throwable t) {
-                loading.setVisibility(View.GONE);
-                listRelative.setVisibility(View.GONE);
-                emptyView.setVisibility(View.VISIBLE);
-                retryBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        loading.setVisibility(View.VISIBLE);
-                        listRelative.setVisibility(View.GONE);
-                        emptyView.setVisibility(View.GONE);
-                        fetchData();
-                    }
-                });
-            }
-        });
-    }
+//    private void fetchData() {
+//        listRelative.setVisibility(View.GONE);
+//        emptyView.setVisibility(View.GONE);
+//        Call<ArrayList<Finance>> call = ApiClient.fetchData().getFinance(Constants.API_KEY, Constants.API_KEY);
+//        call.enqueue(new Callback<ArrayList<Finance>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<Finance>> call, Response<ArrayList<Finance>> response) {
+//                loading.setVisibility(View.GONE);
+//                listRelative.setVisibility(View.VISIBLE);
+//                financeAdapter = new FinanceAdapter(getApplicationContext(), response.body());
+//                listView.setAdapter(financeAdapter);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<Finance>> call, Throwable t) {
+//                loading.setVisibility(View.GONE);
+//                listRelative.setVisibility(View.GONE);
+//                emptyView.setVisibility(View.VISIBLE);
+//                retryBtn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        loading.setVisibility(View.VISIBLE);
+//                        listRelative.setVisibility(View.GONE);
+//                        emptyView.setVisibility(View.GONE);
+//                        fetchData();
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

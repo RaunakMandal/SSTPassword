@@ -2,6 +2,7 @@ package com.iamriju2000.sstpassword.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,88 +12,97 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.iamriju2000.sstpassword.R;
 import com.iamriju2000.sstpassword.adapter.PersonalAdapter;
 import com.iamriju2000.sstpassword.api.ApiClient;
 import com.iamriju2000.sstpassword.constants.Constants;
 import com.iamriju2000.sstpassword.data.Personal;
+import com.iamriju2000.sstpassword.viewmodel.repository.PersonalRepository;
+import com.iamriju2000.sstpassword.viewmodel.viewmodels.PersonalViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PersonalList extends AppCompatActivity {
+    private SwipeRefreshLayout swipeRefreshLayout;
     private PersonalAdapter personalAdapter;
-    private LottieAnimationView loading;
     private RelativeLayout listRelative, emptyView;
     private ListView listView;
     private FloatingActionButton fab;
-    private Button retryBtn;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        fetchData();
-    }
+    private PersonalViewModel personalViewModel;
+    private PersonalRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.password_list);
-        listRelative = (RelativeLayout) findViewById(R.id.list_relative);
-        emptyView = (RelativeLayout) findViewById(R.id.empty_view);
-        listView = (ListView) findViewById(R.id.list);
+        listRelative = findViewById(R.id.list_relative);
+        emptyView = findViewById(R.id.empty_view);
+        listView = findViewById(R.id.list);
         fab = findViewById(R.id.addnew);
-        loading = (LottieAnimationView) findViewById(R.id.progress_anim);
-        retryBtn = (Button) findViewById(R.id.retry_btn);
 
-        listRelative.setVisibility(View.GONE);
-        emptyView.setVisibility(View.GONE);
+        swipeRefreshLayout = findViewById(R.id.swiperefresh);
 
-        fetchData();
+        repository = new PersonalRepository(getApplication());
+        personalViewModel = new ViewModelProvider(this).get(PersonalViewModel.class);
+        personalViewModel.getAllPersonal().observe(this, new Observer<List<Personal>>() {
+            @Override
+            public void onChanged(List<Personal> personalList) {
+                Log.v("TAGTAG", "Changed: " + personalList.size());
 
+                if (personalList.size() <= 0) {
+                    listRelative.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+                } else {
+                    listRelative.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+                    personalAdapter = new PersonalAdapter(getApplicationContext(), (ArrayList<Personal>) personalList, getApplication());
+                    listView.setAdapter(personalAdapter);
+                }
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(PersonalList.this, AddPersonal.class));
             }
         });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+            }
+        });
     }
 
     private void fetchData() {
-        loading.setVisibility(View.VISIBLE);
-        listRelative.setVisibility(View.GONE);
-        emptyView.setVisibility(View.GONE);
-        Call<ArrayList<Personal>> call = ApiClient.fetchData().getPersonal(Constants.API_KEY);
-        call.enqueue(new Callback<ArrayList<Personal>>() {
+        Call<List<Personal>> call = ApiClient.fetchData().getPersonal(Constants.API_KEY, Constants.API_KEY);
+        call.enqueue(new Callback<List<Personal>>() {
             @Override
-            public void onResponse(Call<ArrayList<Personal>> call, Response<ArrayList<Personal>> response) {
-                loading.setVisibility(View.GONE);
-                listRelative.setVisibility(View.VISIBLE);
-                personalAdapter = new PersonalAdapter(getApplicationContext(), response.body());
-                listView.setAdapter(personalAdapter);
+            public void onResponse(Call<List<Personal>> call, Response<List<Personal>> response) {
+                if (response.isSuccessful()) {
+                    Log.v("TAGTAG", " " + response.body().size());
+                    repository.insertAll(response.body());
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Personal>> call, Throwable t) {
-                loading.setVisibility(View.GONE);
-                listRelative.setVisibility(View.GONE);
-                emptyView.setVisibility(View.VISIBLE);
-                retryBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        loading.setVisibility(View.VISIBLE);
-                        listRelative.setVisibility(View.GONE);
-                        emptyView.setVisibility(View.GONE);
-                        fetchData();
-                    }
-                });
+            public void onFailure(Call<List<Personal>> call, Throwable t) {
+                Toast.makeText(PersonalList.this, "Failed to fetch data. Retry!", Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -116,5 +126,14 @@ public class PersonalList extends AppCompatActivity {
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_refresh) {
+            swipeRefreshLayout.setRefreshing(true);
+            fetchData();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -16,5 +16,6 @@
     <string name="failed_add">Failed to Add Data</string>
     <string name="failed_edit">Failed to Edit Data</string>
     <string name="failed_delete">Failed to Delete Data</string>
+    <string name="empty_string">Such Empty! Please press sync or the + button!</string>
 
 </resources>

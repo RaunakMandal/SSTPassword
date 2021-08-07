@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.iamriju2000.sstpassword.R;
 import com.iamriju2000.sstpassword.api.ApiClient;
 import com.iamriju2000.sstpassword.constants.Constants;
+import com.iamriju2000.sstpassword.data.Personal;
+import com.iamriju2000.sstpassword.viewmodel.repository.PersonalRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +29,8 @@ public class UpdatePersonal extends AppCompatActivity {
     private Button updatebtn;
     private ProgressBar pb;
 
+    private PersonalRepository repository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,8 @@ public class UpdatePersonal extends AppCompatActivity {
         pb = (ProgressBar) findViewById(R.id.progress_per);
 
         pb.setVisibility(View.GONE);
+
+        repository = new PersonalRepository(getApplication());
 
         Bundle data = getIntent().getExtras();
         if (data != null) {
@@ -73,26 +79,29 @@ public class UpdatePersonal extends AppCompatActivity {
         updatebtn.setVisibility(View.GONE);
         pb.setVisibility(View.VISIBLE);
         Map<String, String> mp = new HashMap<>();
-        mp.put("name", Constants.encrypt(name.getText().toString()));
-        mp.put("user", Constants.encrypt(user.getText().toString()));
-        mp.put("pass", Constants.encrypt(pass.getText().toString()));
-        mp.put("web", Constants.encrypt(web.getText().toString()));
+        mp.put("name", name.getText().toString());
+        mp.put("user", user.getText().toString());
+        mp.put("pass", pass.getText().toString());
+        mp.put("web", web.getText().toString());
 
-
-        Call<String> editPersonal = ApiClient.fetchData().editById("personal", id, Constants.API_KEY, mp);
-
-        editPersonal.enqueue(new Callback<String>() {
+        Call<Personal> call = ApiClient.fetchData().editPersonal(id, Constants.API_KEY, Constants.API_KEY, mp);
+        call.enqueue(new Callback<Personal>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Toast.makeText(UpdatePersonal.this, response.body(), Toast.LENGTH_SHORT).show();
-                pb.setVisibility(View.GONE);
-                finish();
+            public void onResponse(Call<Personal> call, Response<Personal> response) {
+                if(response.isSuccessful()) {
+                    pb.setVisibility(View.GONE);
+                    updatebtn.setVisibility(View.VISIBLE);
+                    repository.updateOne(response.body());
+                    finish();
+                } else {
+                    Toast.makeText(UpdatePersonal.this, "Failed to edit! Retry!", Toast.LENGTH_SHORT).show();
+                    updatebtn.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(UpdatePersonal.this, getString(R.string.failed_edit), Toast.LENGTH_SHORT).show();
-                updatebtn.setVisibility(View.VISIBLE);
+            public void onFailure(Call<Personal> call, Throwable t) {
+
             }
         });
     }

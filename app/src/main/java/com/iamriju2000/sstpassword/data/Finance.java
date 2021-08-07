@@ -1,18 +1,25 @@
 package com.iamriju2000.sstpassword.data;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "finance")
 public class Finance {
     @SerializedName("_id")
-    private String id;
+    @PrimaryKey
+    @NonNull
+    private String _id;
     @SerializedName("bankname")
     private String bankname;
     @SerializedName("user")
-    private String username;
+    private String user;
     @SerializedName("pass")
-    private String password;
+    private String pass;
     @SerializedName("web")
-    private String website;
+    private String web;
 
     @SerializedName("branch")
     private String branch;
@@ -29,12 +36,12 @@ public class Finance {
     @SerializedName("txnpass")
     private String txnpass;
 
-    public Finance(String id, String bankname, String username, String password, String website, String branch, String acno, String accname, String ifsc, String micr, String profpass, String txnpass) {
-        this.id = id;
+    public Finance(String _id, String bankname, String user, String pass, String web, String branch, String acno, String accname, String ifsc, String micr, String profpass, String txnpass) {
+        this._id = _id;
         this.bankname = bankname;
-        this.username = username;
-        this.password = password;
-        this.website = website;
+        this.user = user;
+        this.pass = pass;
+        this.web = web;
         this.branch = branch;
         this.acno = acno;
         this.accname = accname;
@@ -44,51 +51,99 @@ public class Finance {
         this.txnpass = txnpass;
     }
 
-    public String getId() {
-        return id;
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getBankname() {
         return bankname;
     }
 
-    public String getUsername() {
-        return username;
+    public void setBankname(String bankname) {
+        this.bankname = bankname;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUser() {
+        return user;
     }
 
-    public String getWebsite() {
-        return website;
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public String getWeb() {
+        return web;
+    }
+
+    public void setWeb(String web) {
+        this.web = web;
     }
 
     public String getBranch() {
         return branch;
     }
 
+    public void setBranch(String branch) {
+        this.branch = branch;
+    }
+
     public String getAcno() {
         return acno;
+    }
+
+    public void setAcno(String acno) {
+        this.acno = acno;
     }
 
     public String getAccname() {
         return accname;
     }
 
+    public void setAccname(String accname) {
+        this.accname = accname;
+    }
+
     public String getIfsc() {
         return ifsc;
+    }
+
+    public void setIfsc(String ifsc) {
+        this.ifsc = ifsc;
     }
 
     public String getMicr() {
         return micr;
     }
 
+    public void setMicr(String micr) {
+        this.micr = micr;
+    }
+
     public String getProfpass() {
         return profpass;
     }
 
+    public void setProfpass(String profpass) {
+        this.profpass = profpass;
+    }
+
     public String getTxnpass() {
         return txnpass;
+    }
+
+    public void setTxnpass(String txnpass) {
+        this.txnpass = txnpass;
     }
 }

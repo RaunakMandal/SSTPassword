@@ -1,6 +1,8 @@
 package com.iamriju2000.sstpassword.adapter;
 
 import android.app.AlertDialog;
+import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -28,6 +30,7 @@ import com.iamriju2000.sstpassword.constants.Constants;
 import com.iamriju2000.sstpassword.data.Personal;
 import com.iamriju2000.sstpassword.R;
 import com.iamriju2000.sstpassword.activity.UpdatePersonal;
+import com.iamriju2000.sstpassword.viewmodel.repository.PersonalRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,17 +41,21 @@ import retrofit2.Response;
 
 public class PersonalAdapter extends ArrayAdapter<Personal> implements Filterable {
 
+    private static PersonalRepository repository;
+    private Application application;
+
     private ArrayList<Personal> nonfiltered;
     private ArrayList<Personal> filtered;
     private static Context context;
 
     private AlertDialog.Builder alertdialog;
 
-    public PersonalAdapter(Context context, ArrayList<Personal> objects) {
+    public PersonalAdapter(Context context, ArrayList<Personal> objects, Application application) {
         super(context, 0, objects);
         this.context = context;
         this.filtered = objects;
         this.nonfiltered = new ArrayList<>(objects);
+        this.application = application;
     }
 
     @Override
@@ -58,11 +65,14 @@ public class PersonalAdapter extends ArrayAdapter<Personal> implements Filterabl
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.list_items, parent, false);
         }
-        String id = pwd.getId();
-        String name = Constants.decrypt(pwd.getName());
-        String userid = Constants.decrypt(pwd.getUsername());
-        String loginpass = Constants.decrypt(pwd.getPassword());
-        String web = Constants.decrypt(pwd.getWebsite());
+
+        repository = new PersonalRepository(application);
+
+        String id = pwd.get_id();
+        String name = pwd.getName();
+        String userid = pwd.getUser();
+        String loginpass = pwd.getPass();
+        String web = pwd.getWeb();
 
         ImageButton more = (ImageButton) view.findViewById(R.id.show_more);
         more.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +179,7 @@ public class PersonalAdapter extends ArrayAdapter<Personal> implements Filterabl
             } else {
                 for (Personal data : nonfiltered) {
                     String detected = charSequence.toString().toLowerCase();
-                    if (Constants.decrypt(data.getName()).toLowerCase().contains(detected) || Constants.decrypt(data.getUsername()).toLowerCase().contains(detected)) {
+                    if (data.getName().toLowerCase().contains(detected) || data.getUser().toLowerCase().contains(detected)) {
                         resultData.add(data);
                     }
                 }
@@ -188,17 +198,23 @@ public class PersonalAdapter extends ArrayAdapter<Personal> implements Filterabl
     };
 
     public static void delete(View view, String id) {
-        Call<String> call = ApiClient.fetchData().deleteById("personal", id, Constants.API_KEY);
+        ProgressDialog dialog = new ProgressDialog(view.getRootView().getContext());
+        dialog.setCancelable(false);
+        dialog.setMessage("Please wait...");
+        dialog.show();
+        Call<String> call = ApiClient.fetchData().deletePersonal(id, Constants.API_KEY, Constants.API_KEY);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 Toast.makeText(view.getContext(), response.body(), Toast.LENGTH_SHORT).show();
-                context.startActivity(new Intent(context, PersonalList.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                repository.deleteOne(id);
+                dialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Toast.makeText(context, context.getString(R.string.failed_delete), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
             }
         });
     }
