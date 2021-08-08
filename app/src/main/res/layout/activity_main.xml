@@ -30,7 +30,8 @@
             android:layout_centerHorizontal="true"
             android:text="@string/personal"
             android:textColor="@color/black"
-            android:textSize="28sp" />
+            android:textSize="28sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -57,7 +58,8 @@
             android:layout_centerHorizontal="true"
             android:text="@string/finance"
             android:textColor="@color/black"
-            android:textSize="28sp" />
+            android:textSize="28sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
 </RelativeLayout>

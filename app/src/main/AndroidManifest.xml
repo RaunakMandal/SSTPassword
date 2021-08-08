@@ -13,35 +13,53 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SSTPassword">
         <activity
+            android:name=".activity.ChangePasswordActivity"
+            android:label="Change App Password"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity android:name=".activity.CheckPasswordActivity" />
+        <activity
+            android:name=".activity.NewPassWordActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="About"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
             android:name=".activity.UpdateFinance"
-            android:label="Update Bank Data"></activity>
+            android:label="Update Bank Data"
+            android:parentActivityName=".activity.FinanceList" />
         <activity
             android:name=".activity.AddFinance"
-            android:label="Add New Bank Data" />
+            android:label="Add New Bank Data"
+            android:parentActivityName=".activity.FinanceList" />
         <activity
             android:name=".activity.UpdatePersonal"
-            android:label="Update Data" />
+            android:label="Update Data"
+            android:parentActivityName=".activity.PersonalList" />
         <activity
             android:name=".activity.AddPersonal"
-            android:label="Add New Password" />
+            android:label="Add New Password"
+            android:parentActivityName=".activity.PersonalList" />
         <activity
             android:name=".activity.FinanceList"
             android:label="Finance"
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.BankDetails"
-            android:label="Bank Details" />
+            android:label="Bank Details"
+            android:parentActivityName=".activity.FinanceList" />
         <activity
             android:name=".activity.PersonalList"
             android:label="Passwords"
             android:parentActivityName=".activity.MainActivity" />
-        <activity android:name=".activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name" />
     </application>
 
 </manifest>

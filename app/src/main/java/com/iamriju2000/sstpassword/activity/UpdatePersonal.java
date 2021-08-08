@@ -41,7 +41,7 @@ public class UpdatePersonal extends AppCompatActivity {
         pass = findViewById(R.id.pass_per);
 
         updatebtn = findViewById(R.id.submit_btn_per);
-        pb = (ProgressBar) findViewById(R.id.progress_per);
+        pb = findViewById(R.id.progress_per);
 
         pb.setVisibility(View.GONE);
 
@@ -60,18 +60,14 @@ public class UpdatePersonal extends AppCompatActivity {
         pass.setText(passstr);
         web.setText(webstr);
 
-        updatebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (checkFields(name) && checkFields(user) && checkFields(pass)) {
-                    if (!checkFields(web)) {
-                        web.setText("https://"+name.getText().toString().toLowerCase()+".com");
-                    }
-                    updateData();
+        updatebtn.setOnClickListener(v -> {
+            if (checkFields(name) && checkFields(user) && checkFields(pass)) {
+                if (!checkFields(web)) {
+                    web.setText("https://" + name.getText().toString().toLowerCase() + ".com");
                 }
-                else
-                    Toast.makeText(UpdatePersonal.this, getString(R.string.all_fields), Toast.LENGTH_SHORT).show();
-            }
+                updateData();
+            } else
+                Toast.makeText(UpdatePersonal.this, getString(R.string.all_fields), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -88,31 +84,28 @@ public class UpdatePersonal extends AppCompatActivity {
         call.enqueue(new Callback<Personal>() {
             @Override
             public void onResponse(Call<Personal> call, Response<Personal> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     pb.setVisibility(View.GONE);
                     updatebtn.setVisibility(View.VISIBLE);
                     repository.updateOne(response.body());
                     finish();
                 } else {
-                    Toast.makeText(UpdatePersonal.this, "Failed to edit! Retry!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdatePersonal.this, R.string.failed_edit, Toast.LENGTH_SHORT).show();
                     updatebtn.setVisibility(View.VISIBLE);
+                    pb.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(Call<Personal> call, Throwable t) {
-
+                Toast.makeText(UpdatePersonal.this, R.string.failed_edit, Toast.LENGTH_SHORT).show();
+                updatebtn.setVisibility(View.VISIBLE);
+                pb.setVisibility(View.GONE);
             }
         });
     }
 
     private boolean checkFields(EditText s) {
         return !(s.getText().toString().isEmpty() && TextUtils.isEmpty(s.getText().toString()));
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

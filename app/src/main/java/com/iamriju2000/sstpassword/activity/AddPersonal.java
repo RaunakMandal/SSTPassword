@@ -43,12 +43,10 @@ public class AddPersonal extends AppCompatActivity {
 
         addbtn = findViewById(R.id.submit_btn_per);
 
-        pb = (ProgressBar) findViewById(R.id.progress_per);
+        pb = findViewById(R.id.progress_per);
         pb.setVisibility(View.GONE);
 
-        addbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        addbtn.setOnClickListener(v ->  {
                 if (checkFields(name) && checkFields(user) && checkFields(pass)) {
                     if (!checkFields(web)) {
                         web.setText("https://"+name.getText().toString().toLowerCase()+".com");
@@ -57,7 +55,6 @@ public class AddPersonal extends AppCompatActivity {
                 }
                 else
                     Toast.makeText(AddPersonal.this, getString(R.string.all_fields), Toast.LENGTH_SHORT).show();
-            }
         });
     }
 
@@ -74,14 +71,21 @@ public class AddPersonal extends AppCompatActivity {
         call.enqueue(new Callback<Personal>() {
             @Override
             public void onResponse(Call<Personal> call, Response<Personal> response) {
-                pb.setVisibility(View.GONE);
-                repository.insertOne(response.body());
-                finish();
+                if(response.isSuccessful()) {
+                    pb.setVisibility(View.GONE);
+                    repository.insertOne(response.body());
+                    finish();
+                } else {
+                    Toast.makeText(AddPersonal.this, R.string.failed_add, Toast.LENGTH_SHORT).show();
+                    pb.setVisibility(View.GONE);
+                    addbtn.setVisibility(View.VISIBLE);
+                }
             }
-
             @Override
             public void onFailure(Call<Personal> call, Throwable t) {
-
+                Toast.makeText(AddPersonal.this, R.string.failed_add, Toast.LENGTH_SHORT).show();
+                pb.setVisibility(View.GONE);
+                addbtn.setVisibility(View.VISIBLE);
             }
         });
     }

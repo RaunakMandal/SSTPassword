@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -37,7 +36,7 @@ import retrofit2.Response;
 public class PersonalList extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private PersonalAdapter personalAdapter;
-    private RelativeLayout listRelative, emptyView;
+    private RelativeLayout emptyView;
     private ListView listView;
     private FloatingActionButton fab;
 
@@ -48,7 +47,6 @@ public class PersonalList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.password_list);
-        listRelative = findViewById(R.id.list_relative);
         emptyView = findViewById(R.id.empty_view);
         listView = findViewById(R.id.list);
         fab = findViewById(R.id.addnew);
@@ -60,24 +58,21 @@ public class PersonalList extends AppCompatActivity {
         personalViewModel.getAllPersonal().observe(this, new Observer<List<Personal>>() {
             @Override
             public void onChanged(List<Personal> personalList) {
-                Log.v("TAGTAG", "Changed: " + personalList.size());
+                Log.d("TAGTAG", "Changed: " + personalList.size());
 
                 if (personalList.size() <= 0) {
-                    listRelative.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.GONE);
                 } else {
-                    listRelative.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
+                    listView.setVisibility(View.VISIBLE);
                     personalAdapter = new PersonalAdapter(getApplicationContext(), (ArrayList<Personal>) personalList, getApplication());
                     listView.setAdapter(personalAdapter);
                 }
             }
         });
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(PersonalList.this, AddPersonal.class));
-            }
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(PersonalList.this, AddPersonal.class));
         });
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -93,7 +88,7 @@ public class PersonalList extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Personal>> call, Response<List<Personal>> response) {
                 if (response.isSuccessful()) {
-                    Log.v("TAGTAG", " " + response.body().size());
+                    Log.d("TAGTAG", " " + response.body().size());
                     repository.insertAll(response.body());
                     swipeRefreshLayout.setRefreshing(false);
                 }

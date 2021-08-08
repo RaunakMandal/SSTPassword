@@ -80,5 +80,4 @@ public class PersonalRepository {
             return null;
         }
     }
-
 }

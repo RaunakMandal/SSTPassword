@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.iamriju2000.sstpassword.data.Personal;
 import com.iamriju2000.sstpassword.database.dao.PersonalDao;
 
-@Database(entities = {Personal.class}, version = 1)
+@Database(entities = {Personal.class}, version = 1, exportSchema = false)
 public abstract class PersonalDB extends RoomDatabase {
     public abstract PersonalDao personalDao();
 

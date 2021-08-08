@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SST Password</string>
 
-<!--    App Strings-->
+    <!--    App Strings-->
     <string name="personal">Personal</string>
     <string name="finance">Finance</string>
 
@@ -17,5 +17,15 @@
     <string name="failed_edit">Failed to Edit Data</string>
     <string name="failed_delete">Failed to Delete Data</string>
     <string name="empty_string">Such Empty! Please press sync or the + button!</string>
+    <string name="add_new">Add New</string>
+    <string name="not_available">Not Available</string>
+    <string name="open_source_libraries_used">Open Source Libraries used</string>
+    <string name="srijontours">www.srijontours.com</string>
+    <string name="open_source"><b>Retrofit:</b> A type-safe HTTP client for Android and Java.\n<b>Gson:</b> Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Gson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.\n<b>Java Scalars Converter:</b> A Converter which supports converting strings and both primitives and their boxed types to text/plain bodies.\n<b>Room:</b> The Room persistence library provides an abstraction layer over SQLite to allow fluent database access while harnessing the full power of SQLite.\n<b>Android Lifecycle Components:</b> Lifecycle-aware components perform actions in response to a change in the lifecycle status of another component, such as activities and fragments. These components help you produce better-organized, and often lighter-weight code, that is easier to maintain.\n<b>SwipeRefreshLayout:</b> The swipe-to-refresh user interface pattern is implemented entirely within the SwipeRefreshLayout widget, which detects the vertical swipe, displays a distinctive progress bar, and triggers callback methods in your app. You enable this behavior by adding the widget to your layout file as the parent of a ListView or GridView, and implementing the refresh behavior that gets invoked when the user swipes.\n</string>
+    <string name="enter_new_password">Welcome to SST Password\nEnter a New App Lock Password</string>
+    <string name="is_first">isFirstTime</string>
+    <string name="app_pass">app_password</string>
+    <string name="pref_name">SSTPassPref</string>
+    <string name="generate_your_new_password">Generate your new password</string>
 
 </resources>

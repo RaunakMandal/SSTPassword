@@ -26,7 +26,13 @@ public interface ApiInterface {
     @DELETE("personal/delete/{id}")
     Call<String> deletePersonal(@Path("id") String id, @Header("Authorization") String authKey, @Query("key") String key);
 
-
     @GET("finance")
     Call<List<Finance>> getFinance(@Header("Authorization") String authKey, @Query("key") String key);
+    @POST("finance/add")
+    Call<Finance> addFinance(@Header("Authorization") String authKey, @Query("key") String key, @Body Map<String, String> finance);
+    @PUT("finance/edit/{id}")
+    Call<Finance> editFinance(@Path("id") String id, @Header("Authorization") String authKey, @Query("key") String key, @Body Map<String, String> finance);
+    @DELETE("finance/delete/{id}")
+    Call<String> deleteFinance(@Path("id") String id, @Header("Authorization") String authKey, @Query("key") String key);
+
 }

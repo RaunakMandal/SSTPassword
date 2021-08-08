@@ -1,6 +1,8 @@
 package com.iamriju2000.sstpassword.adapter;
 
 import android.app.AlertDialog;
+import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -27,6 +29,9 @@ import com.iamriju2000.sstpassword.data.Finance;
 import com.iamriju2000.sstpassword.activity.BankDetails;
 import com.iamriju2000.sstpassword.R;
 import com.iamriju2000.sstpassword.activity.UpdateFinance;
+import com.iamriju2000.sstpassword.data.Personal;
+import com.iamriju2000.sstpassword.viewmodel.repository.FinanceRepository;
+import com.iamriju2000.sstpassword.viewmodel.repository.PersonalRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,16 +42,20 @@ import retrofit2.Response;
 
 public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable {
 
+    private static FinanceRepository repository;
+    private Application application;
+
     private ArrayList<Finance> nonfiltered;
     private ArrayList<Finance> filtered;
     private static Context context;
     private AlertDialog.Builder alertdialog;
 
-    public FinanceAdapter(Context context, ArrayList<Finance> objects) {
+    public FinanceAdapter(Context context, ArrayList<Finance> objects, Application application) {
         super(context, 0, objects);
+        this.context = context;
         this.filtered = objects;
         this.nonfiltered = new ArrayList<>(objects);
-        this.context = context;
+        this.application = application;
     }
 
     @Override
@@ -56,6 +65,9 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.list_items, parent, false);
         }
+
+        repository = new FinanceRepository(application);
+
         Context context = view.getContext();
         String id = pwd.get_id();
         String name = pwd.getBankname();
@@ -160,7 +172,7 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-//                                                delete(view, id);
+                                                delete(view, id);
                                             }
                                         })
                                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -213,19 +225,25 @@ public class FinanceAdapter extends ArrayAdapter<Finance> implements Filterable 
         }
     };
 
-//    public static void delete(View view, String id) {
-//        Call<String> call = ApiClient.fetchData().deleteById("finance", id, Constants.API_KEY);
-//        call.enqueue(new Callback<String>() {
-//            @Override
-//            public void onResponse(Call<String> call, Response<String> response) {
-//                Toast.makeText(view.getContext(), response.body(), Toast.LENGTH_SHORT).show();
-//                context.startActivity(new Intent(context, FinanceList.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-//            }
-//
-//            @Override
-//            public void onFailure(Call<String> call, Throwable t) {
-//                Toast.makeText(context, context.getString(R.string.failed_delete), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    public static void delete(View view, String id) {
+        ProgressDialog dialog = new ProgressDialog(view.getRootView().getContext());
+        dialog.setCancelable(false);
+        dialog.setMessage("Please wait...");
+        dialog.show();
+        Call<String> call = ApiClient.fetchData().deleteFinance(id, Constants.API_KEY, Constants.API_KEY);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Toast.makeText(view.getContext(), response.body(), Toast.LENGTH_SHORT).show();
+                repository.deleteOne(id);
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(context, context.getString(R.string.failed_delete), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+    }
 }
