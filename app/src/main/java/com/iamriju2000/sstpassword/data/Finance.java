@@ -12,7 +12,7 @@ public class Finance {
     @PrimaryKey
     @NonNull
     private String _id;
-    @SerializedName("bankname")
+    @SerializedName("name")
     private String bankname;
     @SerializedName("user")
     private String user;
