@@ -37,7 +37,7 @@ public class NewPassWordActivity extends AppCompatActivity {
                 pass1 = password.getText().toString();
                 pass2 = confirm.getText().toString();
 
-                if (!pass1.equals(pass2)) {
+                if (!pass1.equals(pass2) || pass1.isEmpty() || pass2.isEmpty()) {
                     Toast.makeText(NewPassWordActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();

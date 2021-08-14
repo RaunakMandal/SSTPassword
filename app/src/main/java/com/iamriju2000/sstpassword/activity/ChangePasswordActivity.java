@@ -33,7 +33,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             pass1 = password.getText().toString();
             pass2 = confirm.getText().toString();
 
-            if (!pass1.equals(pass2)) {
+            if (!pass1.equals(pass2) || pass1.isEmpty() || pass2.isEmpty()) {
                 Toast.makeText(ChangePasswordActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(ChangePasswordActivity.this, "Password updated successfully", Toast.LENGTH_SHORT).show();
